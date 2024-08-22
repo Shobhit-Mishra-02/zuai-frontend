@@ -1,29 +1,51 @@
+import { getBlog } from "@/app/_lib/blog";
+import { getUser } from "@/app/_lib/user";
+import moment from "moment";
 import { AiOutlineDislike, AiOutlineLike } from "react-icons/ai";
+import { likeBlog, disLikeBlog } from "@/app/_lib/blog";
+import {
+  LikeBlogButton,
+  DislikeBlogButton,
+} from "@/app/_components/ActionButtons";
 
-function BlogPage() {
+async function BlogPage({ params }: { params: { id: string } }) {
+  const response = await Promise.all([getBlog(params.id), getUser()]);
+  const blog = response[0];
+  const user = response[1];
+
+  const doesUserLikedBlog = blog.usersLiked.includes(user._id as string)
+    ? true
+    : false;
+
+  let fullName = blog.author.firstName;
+
+  if (blog.author?.lastName) {
+    fullName += " " + blog.author.lastName;
+  }
+
+  fullName = fullName.toLocaleUpperCase();
+
   return (
-    <div className="max-w-lg mt-20">
+    <div className="w-[460px] mt-20">
       <div className="p-4 bg-white">
-        <h2 className="text-2xl font-bold mb-2">My First Blog Post</h2>
-        <p className="text-gray-500 mb-6">2024-08-18 | John Doe</p>
+        <div className="like-container flex items-center space-x-1">
+          <AiOutlineLike />
+          <span className="text-sm text-gray-600 font-medium" id="like-count">
+            {blog.likeCount}
+          </span>
+        </div>
+        <h2 className="text-2xl font-bold mb-2">{blog.title}</h2>
+        <p className="text-gray-500 mb-6">
+          {moment(blog.createdAt).format("MMM Do YY")} | {fullName}
+        </p>
         <div className="flex justify-end mb-6">
-          <button className="bg-gray-200 hover:bg-gray-100 text-slate-900 font-bold py-2 px-4 rounded">
-            <AiOutlineLike className="inline" /> Like
-          </button>
-          <button className="bg-gray-200 hover:bg-gray-100 text-slate-900 font-bold py-2 px-4 rounded ml-2">
-            <AiOutlineDislike className="inline" /> Dislike
-          </button>
+          {doesUserLikedBlog ? (
+            <DislikeBlogButton id={blog._id as string} />
+          ) : (
+            <LikeBlogButton id={blog._id as string} />
+          )}
         </div>
-        <div className="text-gray-700 text-justify">
-          This is the content of the blog post. Lorem ipsum dolor sit amet,
-          consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut
-          labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-          exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-          Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
-          dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-          proident, sunt in culpa qui officia deserunt mollit anim id est
-          laborum.
-        </div>
+        <div className="text-gray-700 text-justify">{blog.content}</div>
       </div>
     </div>
   );

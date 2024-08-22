@@ -2,12 +2,13 @@
 
 import React, { useState } from "react";
 import { AiOutlineClose, AiOutlineMenu } from "react-icons/ai";
+import { logout } from "../_lib/auth";
+import Link from "next/link";
 
 const navItems = [
-  { id: 1, text: "Home" },
-  { id: 2, text: "Create Blog" },
-  { id: 3, text: "My Blogs" },
-  { id: 4, text: "Logout" },
+  { id: 1, text: "Home", link: "/" },
+  { id: 2, text: "Create Blog", link: "/createBlog" },
+  // { id: 3, text: "My Blogs" },
 ];
 
 function Navbar() {
@@ -19,17 +20,26 @@ function Navbar() {
 
   return (
     <div className="flex justify-between items-center h-24 px-4 shadow-md">
-      <h1 className="w-full text-3xl font-bold">BLOG {":)"}</h1>
+      <Link href={"/"}>
+        <h1 className="w-full text-3xl font-bold">BLOG {":)"}</h1>
+      </Link>
 
       <ul className="hidden md:flex">
         {navItems.map((item) => (
-          <li
-            key={item.id}
+          <Link key={item.id} href={item.link as string}>
+            <li className="p-4 rounded-xl m-2 cursor-pointer duration-300 whitespace-nowrap hover:bg-gray-100">
+              {item.text}
+            </li>
+          </Link>
+        ))}
+        <form action={logout}>
+          <button
+            type="submit"
             className="p-4 rounded-xl m-2 cursor-pointer duration-300 whitespace-nowrap hover:bg-gray-100"
           >
-            {item.text}
-          </li>
-        ))}
+            Logout
+          </button>
+        </form>
       </ul>
 
       {/* Mobile Navigation Icon */}
@@ -57,6 +67,14 @@ function Navbar() {
               {item.text}
             </li>
           ))}
+          <form action={logout}>
+            <button
+              type="submit"
+              className="p-4 rounded-xl m-2 cursor-pointer duration-300 whitespace-nowrap hover:bg-gray-100"
+            >
+              Logout
+            </button>
+          </form>
         </div>
       </ul>
     </div>

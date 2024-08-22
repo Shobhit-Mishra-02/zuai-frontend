@@ -1,20 +1,44 @@
+import { BlogInterface } from "../types";
 import BlogCard from "./BlogCard";
+import Link from "next/link";
 
-function BlogsPage() {
+function BlogsPage({
+  blogs,
+  currentPageNumber,
+  showNextButton,
+  showPrevButton,
+}: {
+  blogs: BlogInterface[];
+  currentPageNumber: number;
+  showNextButton: boolean;
+  showPrevButton: boolean;
+}) {
   return (
-    <div>
+    <div className="">
       <h1 className="text-3xl font-bold text-center mt-8 mb-4">Blogs</h1>
-      <div className="w-fit space-y-2 mx-auto">
-        <BlogCard />
-        <BlogCard />
-        <BlogCard />
+      <div className="w-[460px]  space-y-2 mx-auto">
+        {blogs.map((blog) => (
+          <BlogCard key={blog._id} blog={blog} />
+        ))}
         <div className="w-full flex justify-between align-middle pt-4">
-          <button className="bg-gray-200 hover:bg-gray-100 text-slate-900 font-bold py-2 px-4 rounded">
-            prev
-          </button>
-          <button className="bg-gray-200 hover:bg-gray-100 text-slate-900 font-bold py-2 px-4 rounded">
-            next
-          </button>
+          {showPrevButton ? (
+            <Link href={`/?page=${currentPageNumber - 1}`}>
+              <button className="bg-gray-200 hover:bg-gray-100 text-slate-900 font-bold py-2 px-4 rounded">
+                prev
+              </button>
+            </Link>
+          ) : (
+            <div></div>
+          )}
+          {showNextButton ? (
+            <Link href={`/?page=${currentPageNumber + 1}`}>
+              <button className="bg-gray-200 hover:bg-gray-100 text-slate-900 font-bold py-2 px-4 rounded">
+                next
+              </button>
+            </Link>
+          ) : (
+            <div></div>
+          )}
         </div>
       </div>
     </div>
