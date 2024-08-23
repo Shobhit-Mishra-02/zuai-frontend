@@ -4,7 +4,7 @@ import { BlogInterface, UserInterface } from "@/app/types";
 import { revalidatePath } from "next/cache";
 import { getUserId } from "./auth";
 import { getAuthorizationToken } from "./auth";
-import { z } from "zod";
+import { number, z } from "zod";
 
 const CreateBlogFormSchema = z.object({
   title: z.string().trim(),
@@ -269,4 +269,23 @@ export async function getBlogPage(page: number = 1, limit: number = 5) {
     totalBlogCount: number;
   };
   return data;
+}
+
+export async function getTopBlogs(limit: number) {
+  const token = await getAuthorizationToken();
+  const response = await fetch(
+    process.env.NEXT_PUBLIC_API_URL + `/getTopBlogs?limit=${limit}`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token,
+      },
+    }
+  );
+
+  const data = (await response.json()) as {
+    blogs: BlogInterface[];
+  };
+
+  return data.blogs;
 }

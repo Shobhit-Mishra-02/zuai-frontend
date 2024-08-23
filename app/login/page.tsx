@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import LoginForm from "../_components/LoginForm";
+import LoginForm from "../_components/auth/LoginForm";
 
 function LoginPage() {
   const cokkieStorage = cookies();

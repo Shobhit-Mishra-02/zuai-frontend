@@ -1,9 +1,9 @@
 "use client";
 
-import { signup } from "../_lib/auth";
-import { useFormState } from "react-dom";
-import { useFormStatus } from "react-dom";
 import Link from "next/link";
+import { useFormState } from "react-dom";
+import { signup } from "../../_lib/auth";
+import SubmitButton from "../utils/SubmitButton";
 
 interface FormStateInterface {
   error: {
@@ -16,24 +16,15 @@ interface FormStateInterface {
   message?: undefined;
 }
 
-function SignupSubmitButton() {
-  const { pending } = useFormStatus();
-
-  return (
-    <button
-      type="submit"
-      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-    >
-      {pending ? "Creating user..." : "Login"}
-    </button>
-  );
-}
-
 function SignupForm() {
   const [state, action] = useFormState(signup, {} as FormStateInterface);
   return (
     <form action={action}>
-      {state?.message ? state.message : ""}
+      {state?.message ? (
+        <p className="text-sm text-red-500 pb-1">{state.message}</p>
+      ) : (
+        ""
+      )}
       <div className="mb-4">
         <label
           htmlFor="email"
@@ -48,7 +39,11 @@ function SignupForm() {
           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           placeholder="Enter your email"
         />
-        {state?.error?.email ? state.error.email : ""}
+        {state?.error?.email ? (
+          <p className="text-sm text-red-500 pb-1">{state.error.email}</p>
+        ) : (
+          ""
+        )}
       </div>
       <div className="mb-4">
         <label
@@ -64,7 +59,11 @@ function SignupForm() {
           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           placeholder="Enter your password"
         />
-        {state?.error?.password ? state.error.password : ""}
+        {state?.error?.password ? (
+          <p className="text-sm text-red-500 pb-1">{state.error.password}</p>
+        ) : (
+          ""
+        )}
       </div>
       <div className="mb-4">
         <label
@@ -80,7 +79,13 @@ function SignupForm() {
           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           placeholder="Confirm your password"
         />
-        {state?.error?.confirmPassword ? state.error.confirmPassword : ""}
+        {state?.error?.confirmPassword ? (
+          <p className="text-sm text-red-500 pb-1">
+            {state.error.confirmPassword}
+          </p>
+        ) : (
+          ""
+        )}
       </div>
       <div className="mb-4">
         <label
@@ -96,7 +101,11 @@ function SignupForm() {
           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           placeholder="Enter your first name"
         />
-        {state?.error?.firstName ? state.error.firstName : ""}
+        {state?.error?.firstName ? (
+          <p className="text-sm text-red-500 pb-1">{state.error.firstName}</p>
+        ) : (
+          ""
+        )}
       </div>
       <div className="mb-4">
         <label
@@ -112,7 +121,11 @@ function SignupForm() {
           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           placeholder="Enter your last name"
         />
-        {state?.error?.lastName ? state.error.lastName : ""}
+        {state?.error?.lastName ? (
+          <p className="text-sm text-red-500 pb-1">{state.error.lastName}</p>
+        ) : (
+          ""
+        )}
       </div>
       <div>
         <p>
@@ -123,7 +136,7 @@ function SignupForm() {
         </p>
       </div>
       <div className="flex items-center justify-between pt-4">
-        <SignupSubmitButton />
+        <SubmitButton text="Signup" />
       </div>
     </form>
   );

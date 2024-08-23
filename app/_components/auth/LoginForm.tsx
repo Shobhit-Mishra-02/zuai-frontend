@@ -1,9 +1,9 @@
 "use client";
 
-import { login } from "../_lib/auth";
-import { useFormState } from "react-dom";
-import { useFormStatus } from "react-dom";
 import Link from "next/link";
+import { useFormState } from "react-dom";
+import { login } from "../../_lib/auth";
+import SubmitButton from "../utils/SubmitButton";
 
 interface FormStateInterface {
   error: {
@@ -13,25 +13,16 @@ interface FormStateInterface {
   message?: undefined;
 }
 
-function LoginSubmitButton() {
-  const { pending } = useFormStatus();
-
-  return (
-    <button
-      type="submit"
-      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-    >
-      {pending ? "Wait..." : "Login"}
-    </button>
-  );
-}
-
 function LoginForm() {
   const [state, action] = useFormState(login, {} as FormStateInterface);
 
   return (
     <form action={action}>
-      {state?.message ? state.message : ""}
+      {state?.message ? (
+        <p className="text-sm text-red-500 pb-1">{state.message}</p>
+      ) : (
+        ""
+      )}
       <div className="mb-4">
         <label
           htmlFor="email"
@@ -45,8 +36,13 @@ function LoginForm() {
           name="email"
           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           placeholder="Enter your email"
+          required
         />
-        {state?.error?.email ? state.error.email : ""}
+        {state?.error?.email ? (
+          <p className="text-sm text-red-500">{state.error.email}</p>
+        ) : (
+          ""
+        )}
       </div>
       <div className="mb-4">
         <label
@@ -61,6 +57,7 @@ function LoginForm() {
           name="password"
           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           placeholder="Enter your password"
+          required
         />
         {state?.error?.password ? state.error.password : ""}
       </div>
@@ -73,7 +70,7 @@ function LoginForm() {
         </p>
       </div>
       <div className="flex items-center justify-between pt-4">
-        <LoginSubmitButton />
+        <SubmitButton text="Login" />
       </div>
     </form>
   );
