@@ -1,21 +1,10 @@
 "use client";
 
-import { UserInterface } from "../types";
+import { UserInterface } from "../../types";
 import { useFormState } from "react-dom";
-import { updateUser } from "../_lib/user";
+import { updateUser } from "../../_lib/user";
 import { useFormStatus } from "react-dom";
-
-function ProfileSubmitButton() {
-  const { pending } = useFormStatus();
-  return (
-    <button
-      type="submit"
-      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-    >
-      {pending ? "Updating..." : "Update Profile"}
-    </button>
-  );
-}
+import SubmitButton from "../utils/SubmitButton";
 
 interface FormStateInterface {
   error: {
@@ -33,8 +22,16 @@ function ProfileForm({ user }: { user: UserInterface }) {
 
   return (
     <form action={action}>
+      {state.message ? (
+        state.message.includes("success") ? (
+          <p className="text-sm text-green-700 pb-1">{state.message}</p>
+        ) : (
+          <p className="text-sm text-red-500 pb-1">{state.message}</p>
+        )
+      ) : (
+        ""
+      )}
       <div className="mb-4">
-        {state.message ? state.message : ""}
         <input
           name="id"
           type="text"
@@ -53,7 +50,7 @@ function ProfileForm({ user }: { user: UserInterface }) {
           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           placeholder="Enter email"
         />
-        {state.error?.email ? state.error.email : ""}
+        {state.error?.email ? <p>{state.error.email}</p> : ""}
       </div>
       <div className="mb-4">
         <label
@@ -70,7 +67,7 @@ function ProfileForm({ user }: { user: UserInterface }) {
           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           placeholder="Enter first name"
         />
-        {state.error?.firstName ? state.error.firstName : ""}
+        {state.error?.firstName ? <p>{state.error.firstName}</p> : ""}
       </div>
       <div className="mb-4">
         <label
@@ -87,7 +84,7 @@ function ProfileForm({ user }: { user: UserInterface }) {
           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           placeholder="Enter last name"
         />
-        {state.error?.lastName ? state.error.lastName : ""}
+        {state.error?.lastName ? <p>{state.error.lastName}</p> : ""}
       </div>
       <div className="mb-4">
         <label htmlFor="bio" className="block text-gray-700 font-bold mb-2">
@@ -101,9 +98,9 @@ function ProfileForm({ user }: { user: UserInterface }) {
           placeholder="Enter bio"
           rows={6}
         ></textarea>
-        {state.error?.bio ? state.error.bio : ""}
+        {state.error?.bio ? <p>{state.error.bio}</p> : ""}
       </div>
-      <ProfileSubmitButton />
+      <SubmitButton text="Update Profile" />
     </form>
   );
 }

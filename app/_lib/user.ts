@@ -2,8 +2,7 @@
 
 import { UserInterface } from "@/app/types";
 import { revalidatePath } from "next/cache";
-import { getUserId } from "./auth";
-import { getAuthorizationToken } from "./auth";
+import { getAuthorizationToken, refreshAuthSession } from "./auth";
 import { z } from "zod";
 
 const updateUserFormSchema = z.object({
@@ -61,17 +60,17 @@ export async function updateUser(
     }
   );
 
+  // await refreshAuthSession(response.headers.get("Authorization") as string);
+
   const data = (await response.json()) as {
     user?: UserInterface;
     message?: string;
   };
 
-  console.log(data);
-
   if (response.ok) {
     revalidatePath("/profile");
     return {
-      message: "user created",
+      message: "User updated successfully !!",
     };
   } else {
     return {
@@ -81,17 +80,15 @@ export async function updateUser(
 }
 
 export async function getUser() {
-  const userId = await getUserId();
   const token = await getAuthorizationToken();
 
-  const response = await fetch(
-    process.env.NEXT_PUBLIC_API_URL + "/getUser/" + userId,
-    {
-      headers: {
-        Authorization: token,
-      },
-    }
-  );
+  const response = await fetch(process.env.NEXT_PUBLIC_API_URL + "/getUser", {
+    headers: {
+      Authorization: token,
+    },
+  });
+
+  // await refreshAuthSession(response.headers.get("Authorization") as string);
 
   const user = (await response.json()) as UserInterface;
 

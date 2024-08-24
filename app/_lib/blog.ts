@@ -1,10 +1,9 @@
 "use server";
 
-import { BlogInterface, UserInterface } from "@/app/types";
+import { BlogInterface } from "@/app/types";
 import { revalidatePath } from "next/cache";
-import { getUserId } from "./auth";
-import { getAuthorizationToken } from "./auth";
-import { number, z } from "zod";
+import { z } from "zod";
+import { getAuthorizationToken, refreshAuthSession } from "./auth";
 
 const CreateBlogFormSchema = z.object({
   title: z.string().trim(),
@@ -52,12 +51,12 @@ export async function createBlog(
 
   const data = await response.json();
 
-  console.log(data);
+  await refreshAuthSession(response.headers.get("Authorization") as string);
 
   if (response.ok) {
     revalidatePath("/");
     return {
-      message: "blog created",
+      message: "Blog created successfully !!",
     };
   } else {
     return {
@@ -115,18 +114,18 @@ export async function updateBlog(
 
   const data = await response.json();
 
-  console.log(data);
+  await refreshAuthSession(response.headers.get("Authorization") as string);
 
   if (response.ok) {
     revalidatePath("/editBlog/" + validateFields.data.id);
     return {
-      message: "blog update",
-    };
-  } else {
-    return {
-      message: data.message,
+      message: "Blog updated successfully !!",
     };
   }
+
+  return {
+    message: data.message,
+  };
 }
 
 export async function getBlog(id: string) {
@@ -183,9 +182,9 @@ export async function likeBlog(
     }
   );
 
-  const data = await response.json();
+  // await refreshAuthSession(response.headers.get("Authorization") as string);
 
-  console.log(data);
+  const data = await response.json();
 
   if (response.ok) {
     revalidatePath("/blog/" + validateFields.data.id);
@@ -236,9 +235,9 @@ export async function disLikeBlog(
     }
   );
 
-  const data = await response.json();
+  // await refreshAuthSession(response.headers.get("Authorization") as string);
 
-  console.log(data);
+  const data = await response.json();
 
   if (response.ok) {
     revalidatePath("/blog/" + validateFields.data.id);
@@ -264,6 +263,9 @@ export async function getBlogPage(page: number = 1, limit: number = 5) {
       },
     }
   );
+
+  // await refreshAuthSession(response.headers.get("Authorization") as string);
+
   const data = (await response.json()) as {
     blogs: BlogInterface[];
     totalBlogCount: number;
@@ -283,6 +285,7 @@ export async function getTopBlogs(limit: number) {
     }
   );
 
+  // await refreshAuthSession(response.headers.get("Authorization") as string);
   const data = (await response.json()) as {
     blogs: BlogInterface[];
   };

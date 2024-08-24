@@ -1,8 +1,9 @@
 "use client";
 
 import { useFormState, useFormStatus } from "react-dom";
-import { updateBlog } from "../_lib/blog";
-import { BlogInterface } from "../types";
+import { updateBlog } from "../../_lib/blog";
+import { BlogInterface } from "../../types";
+import SubmitButton from "../utils/SubmitButton";
 
 interface FormStateInterface {
   error: {
@@ -30,9 +31,23 @@ function EditBlogForm({ blog }: { blog: BlogInterface }) {
 
   return (
     <form action={action}>
-      {state.message ? state.message : ""}
+      {state?.message ? (
+        (state.message as string).includes("success") ? (
+          <p className="text-sm text-green-700 pb-1">{state.message}</p>
+        ) : (
+          <p className="text-sm text-red-500 pb-1">{state.message}</p>
+        )
+      ) : (
+        ""
+      )}
       <div className="mb-4">
-        <input name="id" value={blog._id} type="text" readOnly />
+        <input
+          name="id"
+          className="hidden"
+          value={blog._id}
+          type="text"
+          readOnly
+        />
         <label htmlFor="title" className="block text-gray-700 font-bold mb-2">
           Title
         </label>
@@ -44,7 +59,11 @@ function EditBlogForm({ blog }: { blog: BlogInterface }) {
           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           placeholder="Enter title"
         />
-        {state?.error?.title ? state.error.title : ""}
+        {state?.error?.title ? (
+          <p className="text-sm text-red-500 pb-1">{state.error.title}</p>
+        ) : (
+          ""
+        )}
       </div>
       <div className="mb-4">
         <label htmlFor="content" className="block text-gray-700 font-bold mb-2">
@@ -58,9 +77,13 @@ function EditBlogForm({ blog }: { blog: BlogInterface }) {
           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           placeholder="Enter content"
         ></textarea>
-        {state?.error?.content ? state.error.content : ""}
+        {state?.error?.content ? (
+          <p className="text-sm text-red-500 pb-1">{state.error.content}</p>
+        ) : (
+          ""
+        )}
       </div>
-      <EditBlogSubmitButton />
+      <SubmitButton text="Edit" />
     </form>
   );
 }

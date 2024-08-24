@@ -1,12 +1,16 @@
+"use server";
+
+import {
+  DislikeBlogButton,
+  LikeBlogButton,
+} from "@/app/_components/ActionButtons";
 import { getBlog } from "@/app/_lib/blog";
 import { getUser } from "@/app/_lib/user";
 import moment from "moment";
-import { AiOutlineDislike, AiOutlineLike } from "react-icons/ai";
-import { likeBlog, disLikeBlog } from "@/app/_lib/blog";
-import {
-  LikeBlogButton,
-  DislikeBlogButton,
-} from "@/app/_components/ActionButtons";
+import Link from "next/link";
+import { AiOutlineLike } from "react-icons/ai";
+import { FaRegEdit } from "react-icons/fa";
+import { getFullName } from "@/app/_components/utils/helper";
 
 async function BlogPage({ params }: { params: { id: string } }) {
   const response = await Promise.all([getBlog(params.id), getUser()]);
@@ -17,18 +21,23 @@ async function BlogPage({ params }: { params: { id: string } }) {
     ? true
     : false;
 
-  let fullName = blog.author.firstName;
-
-  if (blog.author?.lastName) {
-    fullName += " " + blog.author.lastName;
-  }
-
-  fullName = fullName.toLocaleUpperCase();
+  let fullName = getFullName(blog.author.firstName, blog.author.lastName);
 
   return (
     <div className="w-[460px] mt-20">
       <div className="p-4 bg-white">
-        <div className="like-container flex items-center space-x-1">
+        <div>
+          {user._id === blog.author._id ? (
+            <div className="flex justify-end">
+              <Link href={`/editBlog/${blog._id}`}>
+                <FaRegEdit className="text-2xl text-gray-500 cursor-pointer" />
+              </Link>
+            </div>
+          ) : (
+            ""
+          )}
+        </div>
+        <div className="flex items-center space-x-1">
           <AiOutlineLike />
           <span className="text-sm text-gray-600 font-medium" id="like-count">
             {blog.likeCount}

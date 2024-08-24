@@ -1,10 +1,10 @@
+"use server";
+
+import EditBlogForm from "@/app/_components/blog/EditBlogForm";
 import { getBlog } from "@/app/_lib/blog";
-import EditBlogForm from "@/app/_components/EditBlogForm";
 
 async function EditBlogPage({ params }: { params: { id: string } }) {
-  console.log(params.id);
   const blog = await getBlog(params.id);
-  console.log(blog);
   return (
     <div className="w-[460px] mt-20">
       <div className="container mx-auto">

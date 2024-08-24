@@ -39,7 +39,7 @@ function LoginForm() {
           required
         />
         {state?.error?.email ? (
-          <p className="text-sm text-red-500">{state.error.email}</p>
+          <p className="text-sm text-red-500 pb-1">{state.error.email}</p>
         ) : (
           ""
         )}
@@ -59,7 +59,11 @@ function LoginForm() {
           placeholder="Enter your password"
           required
         />
-        {state?.error?.password ? state.error.password : ""}
+        {state?.error?.password ? (
+          <p className="text-sm text-red-500 pb-1">{state.error.password}</p>
+        ) : (
+          ""
+        )}
       </div>
       <div>
         <p>

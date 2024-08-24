@@ -1,4 +1,4 @@
-import ProfileForm from "@/app/_components/ProfileForm";
+import ProfileForm from "@/app/_components/profile/ProfileForm";
 import { getUser } from "@/app/_lib/user";
 
 async function ProfilePage() {

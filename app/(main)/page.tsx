@@ -1,7 +1,7 @@
 import Navbar from "../_components/Navbar";
-import ProfileCard from "../_components/ProfileCard";
-import TopBlogs from "../_components/TopBlogs";
-import BlogsPage from "../_components/BlogsPage";
+import ProfileCard from "../_components/profile/ProfileCard";
+import TopBlogs from "../_components/blog/TopBlogs";
+import BlogsPage from "../_components/blog/BlogsPage";
 import { BiLike } from "react-icons/bi";
 import { getBlogPage } from "../_lib/blog";
 
@@ -28,7 +28,6 @@ async function Home({
   const blogs = await getBlogPage(page, limit);
   const numberOfPages = getNumberOfPages(blogs.totalBlogCount, limit);
 
-  console.log(numberOfPages);
   const showPrevButton = page === 1 ? false : true;
   const showNextButton = page === numberOfPages ? false : true;
 

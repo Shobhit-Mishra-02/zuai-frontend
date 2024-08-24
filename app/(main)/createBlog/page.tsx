@@ -1,4 +1,4 @@
-import CreateBlogForm from "@/app/_components/CreateBlogForm";
+import CreateBlogForm from "@/app/_components/blog/CreateBlogForm";
 
 function CreateBlogPage() {
   return (

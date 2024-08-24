@@ -1,5 +1,5 @@
 import { BiLike } from "react-icons/bi";
-import { BlogInterface } from "../types";
+import { BlogInterface } from "../../types";
 import Link from "next/link";
 
 function BlogCard({ blog }: { blog: BlogInterface }) {
@@ -19,7 +19,7 @@ function BlogCard({ blog }: { blog: BlogInterface }) {
 
 function TopBlogs({ blogs }: { blogs: BlogInterface[] }) {
   return (
-    <div className="max-w-md bg-white rounded-lg border shadow-md">
+    <div className="w-[400px] bg-white rounded-lg border shadow-md">
       <h2 className="text-xl font-bold p-4">Top {blogs.length} Liked Posts</h2>
       <ul className="divide-y divide-gray-200">
         {blogs.map((blog) => (

@@ -1,10 +1,12 @@
 import Navbar from "../_components/Navbar";
-import ProfileCard from "../_components/ProfileCard";
-import TopBlogs from "../_components/TopBlogs";
+import ProfileCard from "../_components/profile/ProfileCard";
+import TopBlogs from "../_components/blog/TopBlogs";
 import { getUser } from "../_lib/user";
 import { getTopBlogs } from "../_lib/blog";
+import { checkAuth } from "../_lib/auth";
 
 async function Layout({ children }: { children: React.ReactNode }) {
+  await checkAuth();
   const [userData, getTopBlogsData] = await Promise.all([
     getUser(),
     getTopBlogs(5),

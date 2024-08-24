@@ -8,7 +8,6 @@ import Link from "next/link";
 const navItems = [
   { id: 1, text: "Home", link: "/" },
   { id: 2, text: "Create Blog", link: "/createBlog" },
-  // { id: 3, text: "My Blogs" },
 ];
 
 function Navbar() {
@@ -60,17 +59,19 @@ function Navbar() {
 
         <div className="space-y-2">
           {navItems.map((item) => (
-            <li
-              key={item.id}
-              className="p-4 hover:bg-gray-100 duration-300 cursor-pointer"
-            >
-              {item.text}
-            </li>
+            <Link key={item.id} href={item.link as string}>
+              <li
+                key={item.id}
+                className="p-4 hover:bg-gray-100 duration-300 cursor-pointer"
+              >
+                {item.text}
+              </li>
+            </Link>
           ))}
           <form action={logout}>
             <button
               type="submit"
-              className="p-4 rounded-xl m-2 cursor-pointer duration-300 whitespace-nowrap hover:bg-gray-100"
+              className="p-4 hover:bg-gray-100 duration-300 cursor-pointer"
             >
               Logout
             </button>

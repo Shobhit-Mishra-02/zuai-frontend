@@ -18,6 +18,28 @@ export async function setAuthSession(token: string) {
   });
 }
 
+export async function refreshAuthSession(rawToken: string) {
+  const token = jwt.sign(
+    { token: rawToken },
+    process.env.NEXT_PUBLIC_JWT_SECRET as string
+  );
+  await setAuthSession(token);
+}
+
+export async function checkAuth() {
+  const session = cookies().get("session")?.value;
+
+  if (!session) {
+    redirect("/login");
+  }
+
+  try {
+    jwt.verify(session, process.env.NEXT_PUBLIC_JWT_SECRET as string);
+  } catch (error) {
+    redirect("/login");
+  }
+}
+
 const loginFormSchema = z.object({
   email: z.string().trim(),
   password: z.string().trim(),
@@ -63,9 +85,7 @@ export async function login(
       user: UserInterface;
     };
 
-    const token = jwt.sign(data, process.env.NEXT_PUBLIC_JWT_SECRET as string);
-
-    await setAuthSession(token);
+    await refreshAuthSession(data.token);
 
     redirect("/");
   } else {
@@ -145,11 +165,16 @@ export async function signup(
 export async function isAuthorized() {
   const session = cookies().get("session")?.value;
 
-  if (session) {
-    return true;
+  if (!session) {
+    return false;
   }
 
-  return false;
+  try {
+    jwt.verify(session, process.env.NEXT_PUBLIC_JWT_SECRET as string);
+    return true;
+  } catch (error) {
+    return false;
+  }
 }
 
 export async function getAuthorizationToken() {
@@ -162,7 +187,7 @@ export async function getAuthorizationToken() {
   const decryptData = jwt.verify(
     token,
     process.env.NEXT_PUBLIC_JWT_SECRET as string
-  ) as { token: string; user: UserInterface };
+  ) as { token: string };
 
   return decryptData.token;
 }
@@ -173,19 +198,4 @@ export async function logout() {
   }
 
   redirect("/login");
-}
-
-export async function getUserId() {
-  const token = cookies().get("session")?.value;
-
-  if (!token) {
-    redirect("/login");
-  }
-
-  const decryptData = jwt.verify(
-    token,
-    process.env.NEXT_PUBLIC_JWT_SECRET as string
-  ) as { token: string; user: UserInterface };
-
-  return decryptData.user._id;
 }
