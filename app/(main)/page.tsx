@@ -24,7 +24,7 @@ async function Home({
   };
 }) {
   const page = searchParams?.page ? +searchParams?.page : 1;
-  const limit = 2;
+  const limit = 3;
   const blogs = await getBlogPage(page, limit);
   const numberOfPages = getNumberOfPages(blogs.totalBlogCount, limit);
 
