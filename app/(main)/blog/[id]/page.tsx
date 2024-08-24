@@ -57,10 +57,7 @@ async function BlogPage({ params }: { params: { id: string } }) {
           )}
         </div>
         <div className="text-gray-700 text-justify">
-          <textarea
-            className="w-full min-h-[400px] overflow-auto"
-            style={{ resize: "vertical" }}
-          >
+          <textarea className="w-full min-h-[400px] overflow-auto" readOnly>
             {blog.content}
           </textarea>
         </div>
