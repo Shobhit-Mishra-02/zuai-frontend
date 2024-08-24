@@ -56,7 +56,14 @@ async function BlogPage({ params }: { params: { id: string } }) {
             <LikeBlogButton id={blog._id as string} />
           )}
         </div>
-        <div className="text-gray-700 text-justify">{blog.content}</div>
+        <div className="text-gray-700 text-justify">
+          <textarea
+            className="w-full min-h-[400px] overflow-auto"
+            style={{ resize: "vertical" }}
+          >
+            {blog.content}
+          </textarea>
+        </div>
       </div>
     </div>
   );
