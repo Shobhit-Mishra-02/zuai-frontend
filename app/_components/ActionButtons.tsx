@@ -2,8 +2,12 @@
 
 import { ReactElement } from "react";
 import { useFormState, useFormStatus } from "react-dom";
-import { AiOutlineDislike, AiOutlineLike } from "react-icons/ai";
-import { disLikeBlog, likeBlog } from "../_lib/blog";
+import {
+  AiOutlineDelete,
+  AiOutlineDislike,
+  AiOutlineLike,
+} from "react-icons/ai";
+import { disLikeBlog, likeBlog, deleteBlog } from "../_lib/blog";
 
 const ActionButton = ({ text, Icon }: { text: string; Icon: ReactElement }) => {
   const { pending } = useFormStatus();
@@ -43,6 +47,18 @@ export const DislikeBlogButton = ({ id }: { id: string }) => {
         text="Dislike"
         Icon={<AiOutlineDislike className="inline" />}
       />
+    </form>
+  );
+};
+
+export const DeleteBlogButton = ({ id }: { id: string }) => {
+  const [state, action] = useFormState(deleteBlog, {} as FormStateInterface);
+  return (
+    <form action={action}>
+      <input className="hidden" name="id" value={id} type="text" readOnly />
+      <button type="submit">
+        <AiOutlineDelete className="text-2xl text-gray-500 cursor-pointer" />
+      </button>
     </form>
   );
 };

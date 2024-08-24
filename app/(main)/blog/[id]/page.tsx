@@ -11,6 +11,7 @@ import Link from "next/link";
 import { AiOutlineLike } from "react-icons/ai";
 import { FaRegEdit } from "react-icons/fa";
 import { getFullName } from "@/app/_components/utils/helper";
+import { DeleteBlogButton } from "@/app/_components/ActionButtons";
 
 async function BlogPage({ params }: { params: { id: string } }) {
   const response = await Promise.all([getBlog(params.id), getUser()]);
@@ -28,10 +29,11 @@ async function BlogPage({ params }: { params: { id: string } }) {
       <div className="p-4 bg-white">
         <div>
           {user._id === blog.author._id ? (
-            <div className="flex justify-end">
+            <div className="flex gap-2 justify-end">
               <Link href={`/editBlog/${blog._id}`}>
                 <FaRegEdit className="text-2xl text-gray-500 cursor-pointer" />
               </Link>
+              <DeleteBlogButton id={blog._id as string} />
             </div>
           ) : (
             ""

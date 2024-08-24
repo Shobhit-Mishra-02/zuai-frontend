@@ -4,6 +4,7 @@ import { BlogInterface } from "@/app/types";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { getAuthorizationToken, refreshAuthSession } from "./auth";
+import { redirect } from "next/navigation";
 
 const CreateBlogFormSchema = z.object({
   title: z.string().trim(),
@@ -244,6 +245,54 @@ export async function disLikeBlog(
     return {
       message: "you liked the blog",
     };
+  } else {
+    return {
+      message: data.message,
+    };
+  }
+}
+
+interface deleteBlogFormStateInterface {
+  errors?: {
+    id?: string[];
+  };
+  message?: string;
+}
+
+export async function deleteBlog(
+  state: deleteBlogFormStateInterface,
+  formData: FormData
+) {
+  const validateFields = disLikeBlogFormSchema.safeParse({
+    id: formData.get("id"),
+  });
+
+  if (!validateFields.success) {
+    return {
+      error: validateFields.error.flatten().fieldErrors,
+    };
+  }
+
+  const token = await getAuthorizationToken();
+  const response = await fetch(
+    process.env.NEXT_PUBLIC_API_URL + "/deleteBlog",
+    {
+      method: "POST",
+      body: JSON.stringify({
+        id: validateFields.data.id,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token,
+      },
+    }
+  );
+
+  const data = await response.json();
+
+  if (response.ok) {
+    revalidatePath("/");
+    redirect("/");
   } else {
     return {
       message: data.message,
